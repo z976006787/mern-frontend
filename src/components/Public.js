@@ -1,6 +1,34 @@
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { useRefreshMutation } from '../features/auth/authApiSlice'
+import { useEffect } from 'react'
 const Public = () => {
+
+    const [refresh, { isSuccess }] = useRefreshMutation()
+    const navigate = useNavigate()
+
+    const verifyRefreshToken = async () => {
+        try {
+            await refresh()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    useEffect(() => {
+        verifyRefreshToken()
+
+    },[])
+
+
+    useEffect(() => {
+        if (isSuccess) {
+            console.log("previous logging")
+            navigate("/dash")
+        }
+    },[isSuccess,navigate])
+    
+
     const content = (
         <section className="public">
             <header>

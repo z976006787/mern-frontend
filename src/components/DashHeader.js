@@ -1,6 +1,29 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate, Link, useLocation } from 'react-router-dom'
+
+import { useSendLogoutMutation } from '../features/auth/authApiSlice'
 
 const DashHeader = () => {
+
+    const navigate = useNavigate()
+    const { pathname } = useLocation()
+
+    const [sendLogout, {
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    }] = useSendLogoutMutation()
+
+    useEffect(() => {
+        if (isSuccess) navigate('/')
+    }, [isSuccess, navigate])
+
+    if (isLoading) return <p>Logging Out...</p>
+
+    if (isError) return <p>Error: {error.data?.message}</p>
 
     const content = (
         <header className="dash-header">
@@ -9,7 +32,13 @@ const DashHeader = () => {
                     <h1 className="dash-header__title">techNotes</h1>
                 </Link>
                 <nav className="dash-header__nav">
-                    {/* add nav buttons later */}
+                    <button
+                        className="icon-button"
+                        title="Logout"
+                        onClick={sendLogout}
+                    >
+                        <FontAwesomeIcon icon={faRightFromBracket} />
+                    </button>
                 </nav>
             </div>
         </header>

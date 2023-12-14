@@ -10,6 +10,9 @@ import EditUser from './features/users/EditUser';
 import EditNote from './features/notes/EditNote';
 import NewNote from './features/notes/NewNote';
 import NewUserForm from './features/users/NewUserForm';
+import RequireAuth from './features/auth/RequireAuth';
+import { ROLES } from './config/roles';
+
 
 function App() {
   return (
@@ -25,14 +28,15 @@ function App() {
           <Route path="notes">
             <Route index element={<NotesList />} />
             <Route path=":id" element={<EditNote />} />
-            <Route path="new" element={<NewNote/>} />
+            <Route path="new" element={<NewNote />} />
           </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Manager]} />}>
+            <Route path="users">
+              <Route index element={<UsersList />} />
+              <Route path=":id" element={<EditUser />} />
+              <Route path="new" element={<NewUserForm />} />
 
-          <Route path="users">
-            <Route index element={<UsersList />} />
-            <Route path=":id" element={<EditUser />} />
-            <Route path="new" element={<NewUserForm />} />
-
+            </Route>
           </Route>
 
         </Route>{/* End Dash */}
